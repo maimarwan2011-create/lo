@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  background-color: #0d0d0d;
+  color: #00ff88;
+  font-family: monospace;
+}
+
+.container {
+  padding: 20px;
+}
+
+pre {
+  font-size: 18px;
+  white-space: pre-wrap;
+}

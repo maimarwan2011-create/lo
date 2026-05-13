@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شيء في قلبي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@200;300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #fef7f4;
+            --card: rgba(255,255,255,0.6);
+            --accent: #d4556b;
+            --accent-deep: #b83a50;
+            --accent-light: #f4a0b0;
+            --accent-soft: #fce4ea;
+            --peach: #e8956a;
+            --peach-light: #fce0d0;
+            --text: #3a2020;
+            --text-soft: #7a5555;
+            --text-muted: #b08888;
+            --shadow: rgba(212,85,107,0.1);
+            --shadow-s: rgba(60,20,20,0.05);
+            --border: rgba(212,85,107,0.1);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #petal-canvas {
+            position: fixed; inset:0; width:100%; height:100%;
+            z-index:0; pointer-events:none;
+        }
+
+        .bg-orbs {
+            position:fixed; inset:0; z-index:0;
+            pointer-events:none; overflow:hidden;
+        }
+
+        .orb {
+            position:absolute; border-radius:50%;
+            filter:blur(90px); opacity:.45;
+            animation:orbF 14s ease-in-out infinite alternate;
+        }
+
+        .orb-1{width:420px;height:420px;background:var(--accent-soft);top:-12%;right:-6%}
+        .orb-2{width:360px;height:360px;background:var(--peach-light);bottom:-8%;left:-10%;animation-delay:-5s;animation-duration:17s}
+        .orb-3{width:280px;height:280px;background:#eedde4;top:38%;left:45%;animation-delay:-9s;animation-duration:20s}
+
+        @keyframes orbF {
+            0%{transform:translate(0,0) scale(1)}
+            50%{transform:translate(25px,-18px) scale(1.04)}
+            100%{transform:translate(-15px,12px) scale(.97)}
+        }
+
+        .page {
+            position:fixed; inset:0;
+            display:flex; align-items:center; justify-content:center;
+            z-index:10; padding:20px;
+            transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1);
+        }
+
+        .page.hidden {
+            opacity:0; transform:translateY(28px) scale(.97);
+            pointer-events:none;
+        }
+
+        /* === صفحة 1 === */
+        .cover { text-align:center; max-width:460px; }
+
+        .heart-wrap {
+            position:relative; width:90px; height:90px;
+            margin:0 auto 32px;
+        }
+
+        .heart-wrap i {
+            font-size:50px; color:var(--accent);
+            position:absolute; top:50%; left:50%;
+            transform:translate(-50%,-50%);
+            animation:pulse 1.4s ease-in-out infinite;
+            filter:drop-shadow(0 4px 14px var(--shadow));
+        }
+
+        .ring {
+            position:absolute; inset:0;
+            border:1.5px solid var(--accent-light);
+            border-radius:50%;
+            animation:ringP 2.8s ease-out infinite;
+        }
+        .ring:nth-child(3){animation-delay:.9s}
+
+        @keyframes pulse {
+            0%,100%{transform:translate(-50%,-50%) scale(1)}
+            14%{transform:translate(-50%,-50%) scale(1.17)}
+            28%{transform:translate(-50%,-50%) scale(1)}
+            42%{transform:translate(-50%,-50%) scale(1.11)}
+            56%{transform:translate(-50%,-50%) scale(1)}
+        }
+
+        @keyframes ringP {
+            0%{transform:scale(1);opacity:.5}
+            100%{transform:scale(1.9);opacity:0}
+        }
+
+        .cover h1 {
+            font-family:'Amiri',serif;
+            font-size:clamp(28px,7vw,48px);
+            font-weight:700; color:var(--accent-deep);
+            line-height:1.5; margin-bottom:10px;
+        }
+
+        .line-dec {
+            width:44px; height:2px;
+            background:linear-gradient(90deg,transparent,var(--accent-light),transparent);
+            margin:0 auto 14px;
+        }
+
+        .cover p {
+            font-size:clamp(14px,2.6vw,17px);
+            color:var(--text-soft); font-weight:300;
+            line-height:1.9; margin-bottom:40px;
+        }
+
+        .open-btn {
+            display:inline-flex; align-items:center; gap:10px;
+            padding:15px 38px;
+            background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+            color:#fff; border:none; border-radius:60px;
+            font-family:'Tajawal',sans-serif;
+            font-size:16px; font-weight:500; cursor:pointer;
+            box-shadow:0 6px 22px var(--shadow),0 2px 6px var(--shadow-s);
+            transition:all .35s cubic-bezier(.4,0,.2,1);
+            position:relative; overflow:hidden;
+        }
+
+        .open-btn::after {
+            content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+            transition:left .5s;
+        }
+
+        .open-btn:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(212,85,107,.22)}
+        .open-btn:hover::after{left:100%}
+
+        /* === صفحة 2 === */
+        .letter-wrap {
+            max-width:580px; width:100%;
+            max-height:92vh; overflow-y:auto;
+            scrollbar-width:thin;
+            scrollbar-color:var(--accent-light) transparent;
+        }
+
+        .letter-wrap::-webkit-scrollbar{width:3px}
+        .letter-wrap::-webkit-scrollbar-thumb{background:var(--accent-light);border-radius:10px}
+
+        .letter {
+            background:var(--card);
+            backdrop-filter:blur(22px);
+            -webkit-backdrop-filter:blur(22px);
+            border:1px solid var(--border);
+            border-radius:26px;
+            padding:clamp(26px,5vw,46px);
+            box-shadow:0 8px 36px var(--shadow-s),0 1px 2px var(--shadow);
+            position:relative;
+        }
+
+        .letter::before {
+            content:'';position:absolute;top:0;right:36px;left:36px;height:2px;
+            background:linear-gradient(90deg,transparent,var(--accent-light),var(--peach),var(--accent-light),transparent);
+            border-radius:2px;
+        }
+
+        .letter h2 {
+            font-family:'Amiri',serif;
+            font-size:clamp(19px,4vw,26px);
+            color:var(--accent-deep);
+            margin-bottom:18px;
+        }
+
+        .letter .body {
+            font-size:clamp(15px,2.5vw,17px);
+            line-height:2.2; color:var(--text);
+            font-weight:300;
+        }
+
+        .letter .body .hl{color:var(--accent);font-weight:500}
+        .letter .body .pc{color:var(--peach);font-weight:500}
+
+        .letter .sign {
+            font-family:'Amiri',serif;
+            font-size:clamp(15px,2.8vw,20px);
+            color:var(--accent);
+            margin-top:24px;
+            text-align:left;
+        }
+
+        .next-btn {
+            display:flex; align-items:center; justify-content:center; gap:8px;
+            margin-top:32px;
+            padding:14px 36px;
+            background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+            color:#fff; border:none; border-radius:60px;
+            font-family:'Tajawal',sans-serif;
+            font-size:15px; font-weight:500; cursor:pointer;
+            box-shadow:0 5px 20px var(--shadow);
+            transition:all .35s cubic-bezier(.4,0,.2,1);
+            position:relative; overflow:hidden; width:100%;
+        }
+
+        .next-btn::after {
+            content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+            transition:left .5s;
+        }
+
+        .next-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(212,85,107,.22)}
+        .next-btn:hover::after{left:100%}
+
+        /* === صفحة 3 === */
+        .q-wrap{text-align:center;max-width:500px}
+
+        .q-heart{width:76px;height:76px;margin:0 auto 24px;position:relative}
+
+        .q-heart i {
+            font-size:48px;color:var(--accent);
+            position:absolute;top:50%;left:50%;
+            transform:translate(-50%,-50%);
+            animation:pulse 1.4s ease-in-out infinite;
+            filter:drop-shadow(0 4px 12px var(--shadow));
+        }
+
+        .q-glow {
+            position:absolute;inset:-22px;border-radius:50%;
+            background:radial-gradient(circle,var(--accent-soft),transparent 70%);
+            animation:gP 2.2s ease-in-out infinite;
+        }
+
+        @keyframes gP{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.18);opacity:.25}}
+
+        .q-wrap h2 {
+            font-family:'Amiri',serif;
+            font-size:clamp(22px,5vw,38px);
+            color:var(--text);line-height:1.8;
+            margin-bottom:44px;
+        }
+
+        .q-wrap h2 .em{color:var(--accent);position:relative}
+        .q-wrap h2 .em::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:2px;background:var(--accent-light);border-radius:2px}
+
+        .btns{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap;position:relative;min-height:100px}
+
+        .btn-y {
+            padding:15px 44px;
+            font-size:clamp(16px,3vw,20px);
+            font-family:'Amiri',serif;font-weight:700;
+            border:none;border-radius:60px;cursor:pointer;
+            background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+            color:#fff;box-shadow:0 6px 22px var(--shadow);
+            transition:all .35s cubic-bezier(.4,0,.2,1);
+            position:relative;overflow:hidden;z-index:2;
+        }
+
+        .btn-y::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);transition:left .5s}
+        .btn-y:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 10px 32px rgba(212,85,107,.28)}
+        .btn-y:hover::after{left:100%}
+
+        .btn-n {
+            padding:11px 30px;
+            font-size:clamp(13px,2.3vw,15px);
+            font-family:'Tajawal',sans-serif;font-weight:400;
+            border:1px solid var(--accent-light);
+            border-radius:60px;cursor:pointer;
+            background:var(--accent-soft);
+            color:var(--text);
+            box-shadow:0 2px 8px var(--shadow-s);
+            transition:all .25s;
+            position:absolute;z-index:1;
+            left:50%;top:50%;transform:translate(-50%,-50%);
+        }
+
+        .no-msg{position:absolute;bottom:-38px;left:50%;transform:translateX(-50%);font-size:13px;color:var(--accent);white-space:nowrap;opacity:0;transition:opacity .35s;font-weight:400}
+        .no-msg.show{opacity:1}
+
+        /* === صفحة 4 === */
+        #confetti{position:fixed;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
+
+        .cel{text-align:center;position:relative;z-index:10;max-width:500px}
+
+        .cel-h{width:90px;height:90px;margin:0 auto 20px;animation:celIn .8s cubic-bezier(.34,1.56,.64,1) both}
+        .cel-h i{font-size:64px;color:var(--accent);filter:drop-shadow(0 6px 20px var(--shadow))}
+
+        @keyframes celIn{0%{transform:scale(0) rotate(-12deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+
+        .cel h2{font-family:'Amiri',serif;font-size:clamp(24px,6vw,44px);color:var(--accent-deep);line-height:1.5;margin-bottom:14px}
+        .cel p{font-size:clamp(14px,2.6vw,17px);color:var(--text-soft);font-weight:300;line-height:2;margin-bottom:34px}
+
+        .cnt-box{display:inline-flex;align-items:center;gap:12px;background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:16px;padding:14px 24px;box-shadow:0 4px 18px var(--shadow-s);margin-bottom:30px}
+        .cnt-box i{color:var(--accent);font-size:17px;animation:pulse 1.4s ease-in-out infinite}
+        .cnt-box span{font-size:14px;color:var(--text-soft)}
+        .cnt-box .n{font-family:'Amiri',serif;font-size:20px;font-weight:700;color:var(--accent-deep)}
+
+        .again{background:none;border:1px solid var(--border);color:var(--text-muted);padding:9px 26px;border-radius:30px;font-family:'Tajawal',sans-serif;font-size:13px;cursor:pointer;transition:all .3s}
+        .again:hover{border-color:var(--accent-light);color:var(--accent);background:var(--accent-soft)}
+
+        @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+        .a{animation:fadeUp .7s cubic-bezier(.4,0,.2,1) both}
+        .a1{animation-delay:.12s}.a2{animation-delay:.24s}.a3{animation-delay:.36s}.a4{animation-delay:.48s}
+
+        .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(18px);background:var(--card);border:1px solid var(--border);color:var(--text-soft);padding:9px 22px;border-radius:40px;font-size:13px;z-index:200;opacity:0;transition:all .4s cubic-bezier(.4,0,.2,1);pointer-events:none;box-shadow:0 4px 18px var(--shadow-s)}
+        .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+        @media(max-width:600px){.letter{padding:22px 18px;border-radius:20px}}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    </style>
+</head>
+<body>
+
+    <canvas id="petal-canvas" aria-hidden="true"></canvas>
+    <div class="bg-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- صفحة 1 -->
+    <section class="page" id="p1" aria-label="الغلاف">
+        <div class="cover">
+            <div class="heart-wrap a">
+                <div class="ring"></div>
+                <div class="ring"></div>
+                <i class="fas fa-heart"></i>
+            </div>
+            <h1 class="a a1">شيء في قلبي</h1>
+            <div class="line-dec a a2"></div>
+            <p class="a a2">حاجة خبيتها فيني زمان طويل،<br>والنهارده قررت أقولها.</p>
+            <button class="open-btn a a3" id="openBtn" aria-label="اقرأ">
+                <i class="fas fa-feather-alt"></i>
+                اقرأ
+            </button>
+        </div>
+    </section>
+
+    <!-- صفحة 2 -->
+    <section class="page hidden" id="p2" aria-label="الرسالة">
+        <div class="letter-wrap">
+            <div class="letter">
+                <h2 class="a">لو حد يسألني إنت مين،</h2>
+                <div class="body a a1">
+                    مش هقدر أصفك بكلمات عادية، لأنك مش شخص عادي بالنسبالي.<br><br>
+                    أنا بحبك. بجد بحبك. مش بالطريقة اللي بيتقال فيها الكلام ده عادي وبلاش مشاعر — أنا بحبك باللي أنا عايشه كل يوم وكل لحظة.<br><br>
+                    من أول ما أنت دخلت حياتي، حاجة اتغيرت جوهرياً. مش قادره أفهمها ولا أشرحها، بس <span class="hl">أنا عارفه إنها حقيقية</span>.<br><br>
+                    مش بتمنى أي حاجة منك. مش عايزة منك تسأل نفسك إنت لازم تعمل إيه. أنا بس عايزاك تعرف إن في بنت موجودة في مكان ما، <span class="pc">قلبها بين إيديك من غير ما تشعر</span>.<br><br>
+                    ده اعتراف. مش طلب ارتباط والعبث دا، مش ضغط، مش حاجة تزعلك. بس حقيقة محتاجة تخرج من صدري، لأني خبيتها كتير ومش عارفة أكتمها أكتر من كده.<br><br>
+                    اعرف انت بس، وخلي الباقي على الله.
+                </div>
+                <div class="sign a a2">— بس كده... <i class="fas fa-heart" style="color:var(--accent);font-size:.7em"></i></div>
+                <button class="next-btn a a3" id="nextBtn">
+                    <i class="fas fa-arrow-left"></i>
+                    يلا
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- صفحة 3 -->
+    <section class="page hidden" id="p3" aria-label="السؤال">
+        <div class="q-wrap">
+            <div class="q-heart a">
+                <div class="q-glow"></div>
+                <i class="fas fa-heart"></i>
+            </div>
+            <h2 class="a a1">عارفة إنك عرفت <span class="em">اللي في قلبي</span>؟</h2>
+            <div class="btns">
+                <button class="btn-y a a2" id="yesBtn"><i class="fas fa-heart"></i>&nbsp; عارف</button>
+                <button class="btn-n a a3" id="noBtn">مش عارف</button>
+                <div class="no-msg" id="noMsg"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- صفحة 4 -->
+    <section class="page hidden" id="p4" aria-label="النهاية">
+        <canvas id="confetti" aria-hidden="true"></canvas>
+        <div class="cel">
+            <div class="cel-h"><i class="fas fa-heart"></i></div>
+            <h2 class="a a1">يلا خلاص قلتها</h2>
+            <p class="a a2">بس عايزاك تعرف إن اللي قلته ده أول مرة أحكيه،<br>ومش هقولها لحد تاني غيرك.</p>
+            <div class="cnt-box a a3">
+                <i class="fas fa-heart"></i>
+                <span>مرّة قلتها فيها:</span>
+                <span class="n" id="cnt">1</span>
+            </div>
+            <br>
+            <button class="again a a4" id="againBtn"><i class="fas fa-redo"></i>&nbsp; من الأول</button>
+        </div>
+    </section>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        /* === بتلات ورد === */
+        !function(){
+            const c=document.getElementById('petal-canvas'),x=c.getContext('2d');
+            let W,H;const P=[];
+            const cols=['rgba(212,85,107,0.07)','rgba(232,149,106,0.06)','rgba(244,160,176,0.08)','rgba(252,196,209,0.05)','rgba(252,228,234,0.09)'];
+            function rz(){W=c.width=innerWidth;H=c.height=innerHeight}
+            rz();addEventListener('resize',rz);
+            function dp(px,py,s,r,col){
+                x.save();x.translate(px,py);x.rotate(r);x.fillStyle=col;
+                x.beginPath();const sz=Math.max(1,s);
+                x.moveTo(0,0);
+                x.bezierCurveTo(sz*.4,-sz*.6,sz,-sz*.4,sz*.5,sz*.2);
+                x.bezierCurveTo(sz*.2,sz*.6,-sz*.1,sz*.4,0,0);
+                x.fill();x.restore();
+            }
+            for(let i=0;i<28;i++)P.push({
+                x:Math.random()*W,y:Math.random()*H,
+                s:8+Math.random()*16,r:Math.random()*Math.PI*2,
+                rs:(Math.random()-.5)*.014,
+                vy:.25+Math.random()*.5,vx:(Math.random()-.5)*.25,
+                wb:Math.random()*Math.PI*2,wa:.3+Math.random()*.4,
+                c:cols[Math.floor(Math.random()*cols.length)]
+            });
+            !function lp(){
+                x.clearRect(0,0,W,H);
+                P.forEach(p=>{
+                    p.wb+=.011;p.x+=p.vx+Math.sin(p.wb)*p.wa;p.y+=p.vy;p.r+=p.rs;
+                    if(p.y>H+30){p.y=-30;p.x=Math.random()*W}
+                    if(p.x<-40)p.x=W+40;if(p.x>W+40)p.x=-40;
+                    dp(p.x,p.y,p.s,p.r,p.c);
+                });
+                requestAnimationFrame(lp);
+            }();
+        }();
+
+        /* === تنقل === */
+        const ps=['p1','p2','p3','p4'].map(i=>document.getElementById(i));
+        function go(n){ps.forEach((p,i)=>{if(i===n)setTimeout(()=>p.classList.remove('hidden'),80);else p.classList.add('hidden')})}
+
+        /* === فتح الرسالة === */
+        document.getElementById('openBtn').onclick=()=>go(1);
+
+        /* === زر يلا === */
+        document.getElementById('nextBtn').onclick=()=>go(2);
+
+        /* === زر "مش عارف" الهارب === */
+        const nBtn=document.getElementById('noBtn'),nMsg=document.getElementById('noMsg');
+        let nc=0;
+        const hints=['متأكد؟','أنت عارف فعلاً...','القلب بيقول حاجة تانية','حاول تاني','الزر ده بيهرب منك!','اقرأ اللي فوق تاني','القلب مش بيغلط','أنا متأكدة إنك عارف','حتى الزر عارف!','مفيش مفر... إنت عارف'];
+
+        function run(){
+            const pg=document.getElementById('p3'),pr=pg.getBoundingClientRect(),br=nBtn.getBoundingClientRect();
+            const mx=pr.width-br.width-28,my=pr.height-br.height-28;
+            let nx,ny,t=0;
+            do{nx=14+Math.random()*mx;ny=14+Math.random()*my;t++}
+            while(t<25&&Math.abs(nx-(br.left-pr.left))<85&&Math.abs(ny-(br.top-pr.top))<85);
+            const cr=nBtn.parentElement.getBoundingClientRect();
+            nBtn.style.left=(nx-(cr.left-pr.left))+'px';
+            nBtn.style.top=(ny-(cr.top-pr.top))+'px';
+            nBtn.style.transform='scale('+Math.max(.45,1-nc*.05)+')';
+            nBtn.style.opacity=Math.max(.35,1-nc*.06);
+            nMsg.textContent=hints[Math.min(nc,hints.length-1)];
+            nMsg.classList.add('show');
+            setTimeout(()=>nMsg.classList.remove('show'),2200);
+            nc++;
+        }
+
+        nBtn.addEventListener('mouseenter',run);
+        nBtn.addEventListener('touchstart',function(e){e.preventDefault();run()},{passive:false});
+
+        /* === زر "عارف" === */
+        document.getElementById('yesBtn').onclick=()=>{go(3);confetti();counter()};
+
+        /* === كونفيتي === */
+        function confetti(){
+            const c=document.getElementById('confetti'),x=c.getContext('2d');
+            c.width=innerWidth;c.height=innerHeight;
+            const ps=[];
+            const cols=['#d4556b','#f4a0b0','#e8956a','#fce0d0','#ffc2d1','#b83a50','#ff8fa3','#f9d5cf'];
+
+            function burst(cx,cy,n,sp){
+                for(let i=0;i<n;i++){
+                    const a=(Math.PI*2/n)*i+Math.random()*.4,v=sp*(.5+Math.random());
+                    ps.push({x:cx,y:cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1.5,
+                        w:3+Math.random()*5,h:2+Math.random()*3,
+                        c:cols[Math.floor(Math.random()*cols.length)],
+                        a:1,d:.006+Math.random()*.008,g:.06+Math.random()*.03,
+                        r:Math.random()*Math.PI*2,rs:(Math.random()-.5)*.11,
+                        s:Math.random()>.7?'h':'r'});
+                }
+            }
+
+            burst(c.width/2,c.height/2,160,7);
+            setTimeout(()=>burst(c.width*.25,c.height*.4,70,5),350);
+            setTimeout(()=>burst(c.width*.75,c.height*.4,70,5),600);
+
+            function dh(cx,cy,s){
+                x.beginPath();const sz=Math.max(.5,s);
+                x.moveTo(cx,cy+sz*.3);
+                x.bezierCurveTo(cx,cy,cx-sz,cy,cx-sz,cy+sz*.3);
+                x.bezierCurveTo(cx-sz,cy+sz*.75,cx,cy+sz,cx,cy+sz*1.2);
+                x.bezierCurveTo(cx,cy+sz,cx+sz,cy+sz*.75,cx+sz,cy+sz*.3);
+                x.bezierCurveTo(cx+sz,cy,cx,cy,cx,cy+sz*.3);
+                x.fill();
+            }
+
+            !function an(){
+                x.clearRect(0,0,c.width,c.height);let al=false;
+                ps.forEach(p=>{
+                    if(p.a<=0)return;al=true;
+                    p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.vx*=.99;p.a-=p.d;p.r+=p.rs;
+                    x.save();x.globalAlpha=Math.max(0,p.a);x.fillStyle=p.c;
+                    x.translate(p.x,p.y);x.rotate(p.r);
+                    if(p.s==='h')dh(0,0,p.w);
+                    else{x.beginPath();x.roundRect(-p.w/2,-p.h/2,p.w,p.h,1.5);x.fill()}
+                    x.restore();
+                });
+                if(al)requestAnimationFrame(an);
+            }();
+            addEventListener('resize',()=>{c.width=innerWidth;c.height=innerHeight});
+        }
+
+        /* === عداد === */
+        function counter(){
+            const el=document.getElementById('cnt');let n=1;
+            setInterval(()=>{n++;el.textContent=n.toLocaleString('ar-EG')},800);
+        }
+
+        /* === إعادة === */
+        document.getElementById('againBtn').onclick=()=>{
+            nc=0;nBtn.style.transform='';nBtn.style.opacity='';nBtn.style.left='';nBtn.style.top='';
+            document.getElementById('cnt').textContent='1';
+            go(0);
+        };
+
+        /* === توست === */
+        document.addEventListener('contextmenu',e=>{
+            e.preventDefault();
+            const t=document.getElementById('toast');
+            t.textContent='الحب مش بيستنى...';
+            t.classList.add('show');
+            setTimeout(()=>t.classList.remove('show'),2200);
+        });
+    </script>
+</body>
+</html>
